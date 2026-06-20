@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Pricing Plans</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f6f9fc;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Toggle Switch Styling Container */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 56px;
+            height: 30px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #e2e8f0;
+            transition: 0.3s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        input:checked + .slider {
+            background-color: #4a90e2;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Pricing Table Cards Container Grid */
+        .pricing-grid {
+            display: flex;
+            gap: 24px;
+            max-width: 1000px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        /* Individual Plan Card Setup */
+        .pricing-card {
+            background: #ffffff;
+            flex: 1;
+            padding: 35px 25px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        /* Highlight feature tier card */
+        .pricing-card.popular {
+            border: 2px solid #4a90e2;
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4a90e2;
+            color: #fff;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .plan-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1a202c;
+        }
+
+        .price-box {
+            margin-bottom: 25px;
+        }
+
+        .currency {
+            font-size: 24px;
+            font-weight: 600;
+            vertical-align: super;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 800;
+            color: #1a202c;
+        }
+
+        .period {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            color: #4a5568;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Checkmark icon using pure CSS */
+        .features-list li::before {
+            content: "✓";
+            color: #2ed573;
+            font-weight: bold;
+        }
+
+        .features-list li.disabled {
+            color: #a0aec0;
+        }
+
+        .features-list li.disabled::before {
+            content: "✕";
+            color: #e53e3e;
+        }
+
+        .cta-btn {
+            background-color: #edf2f7;
+            color: #4a5568;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .popular .cta-btn {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .cta-btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .popular .cta-btn:hover {
+            background-color: #357abd;
+        }
+
+        /* Responsive scaling breakpoint layout rule */
+        @media (max-width: 768px) {
+            .pricing-grid {
+                flex-direction: column;
+                gap: 35px;
+            }
+            .pricing-card.popular {
+                transform: scale(1); /* Removes structural scales on vertical layouts */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ready to Get Started?</h1>
+    <p class="subtitle">Choose a plan tailored to your business needs.</p>
+
+    <div class="toggle-container">
+        <span>Monthly</span>
+        <label class="switch">
+            <input type="checkbox" id="billing-toggle">
+            <span class="slider"></span>
+        </label>
+        <span>Yearly <span style="color: #2ed573; font-size: 12px;">(Save 20%)</span></span>
+    </div>
+
+    <div class="pricing-grid">
+        
+        <div class="pricing-card">
+            <div>
+                <div class="plan-name">Starter</div>
+                <div class="price-box">
+                    <span class="currency">$</span>
+                    <span class="price" id="starter-price">19</span>
+                    <span class="period" id="starter-period">/ mo</span>
+                </div>
+                <ul class="features-list">
+                    <li>1 User Account</li>
+                    <li>10 GB Secure Cloud Space</li>
+                    <li>Standard Support access</li>
+                    <li class="disabled">Custom branding option</li>
+                </ul>
+            </div>
+            <button class="cta-btn">Choose Starter</button>
+        </div>
+
+        <div class="pricing-card popular">
+            <div class="badge">Most Popular</div>
+            <div>
+                <div class="plan-name">Professional</div>
+                <div class="price-box">
+                    <span class="currency">$</span>
+                    <span class="price" id="pro-price">49</span>
+                    <span class="period" id="pro-period">/ mo</span>
+                </div>
+                <ul class="features-list">
+                    <li>5 User Accounts</li>
+                    <li>100 GB Secure Cloud Space</li>
+                    <li>24/7 Priority Support access</li>
+                    <li>Custom branding option</li>
+                </ul>
+            </div>
+            <button class="cta-btn">Choose Pro</button>
+        </div>
+
+        <div class="pricing-card">
+            <div>
+                <div class="plan-name">Enterprise</div>
+                <div class="price-box">
+                    <span class="currency">$</span>
+                    <span class="price" id="enterprise-price">99</span>
+                    <span class="period" id="enterprise-period">/ mo</span>
+                </div>
+                <ul class="features-list">
+                    <li>Unlimited Users</li>
+                    <li>1 TB Secure Cloud Space</li>
+                    <li>Dedicated Account Manager</li>
+                    <li>Custom branding option</li>
+                </ul>
+            </div>
+            <button class="cta-btn">Contact Sales</button>
+        </div>
+
+    </div>
+
+    <script src="pricing.js"></script>
+</body>
+</html>
